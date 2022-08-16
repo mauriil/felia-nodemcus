@@ -4,7 +4,7 @@
 // Update these with values suitable for your network.
 const char *ssid = "HUAWEI-1035";
 const char *password = "93542670";
-const char *mqtt_server = "broker.mqttdashboard.com";
+const char *mqtt_server = "143.198.182.161";
 // const char* mqtt_server = "iot.eclipse.org";
 
 Servo FLAPS;
