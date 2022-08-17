@@ -6,6 +6,7 @@ const char *ssid = "HUAWEI-1035";
 const char *password = "93542670";
 const char *mqtt_server = "143.198.182.161";
 //const char* mqtt_server = "iot.eclipse.org";
+String inStringESCMessage = "";
 
 Servo ESCPIN;  // create servo object to control a servo
 WiFiClient espClient;
@@ -30,14 +31,17 @@ void setup_wifi() {
 
 void callback(char* topic, byte* payload, unsigned int length) 
 {
-  Serial.print("Command from MQTT broker is : [");
+  Serial.print("Message from: ");
   Serial.print(topic);
   for(int i=0;i<length;i++)
   {
-    if((int)payload[i]>194||(int)payload[i]<0)
-    break;
-    ESCPIN.write((int)payload[i]);              // tell servo to go to position in variable '(int)payload[i]'
+    inStringESCMessage += (char)payload[i];
   }
+    Serial.print(" | ");
+    Serial.print("Value: ");
+    Serial.println(inStringESCMessage.toInt());
+    ESCPIN.write(inStringESCMessage.toInt());
+    inStringESCMessage = "";
 }//end callback
 
 void reconnect() {
