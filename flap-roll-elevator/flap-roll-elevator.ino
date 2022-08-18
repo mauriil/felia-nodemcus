@@ -5,7 +5,8 @@
 const char *ssid = "HUAWEI-1035";
 const char *password = "93542670";
 const char *mqtt_server = "143.198.182.161";
-// const char* mqtt_server = "iot.eclipse.org";
+
+String inStringESCMessage = "";
 
 Servo FLAPS;
 Servo ROLL;
@@ -33,37 +34,45 @@ void setup_wifi()
 
 void callback(char *topic, byte *payload, unsigned int length)
 {
-  Serial.print("Command from MQTT broker is : [");
+  Serial.print("Message from: ");
   Serial.print(topic);
-  if (topic == "/FELIA/FLAPS")
+  if(strcmp(topic, "/FELIA/FLAPS") == 0)
   {
     for (int i = 0; i < length; i++)
     {
-      if ((int)payload[i] > 194 || (int)payload[i] < 0)
-        break;
-      FLAPS.write((int)payload[i]);
+      inStringESCMessage += (char)payload[i];
     }
+    Serial.print(" | ");
+    Serial.print("Value: ");
+    Serial.println(inStringESCMessage.toInt());
+    FLAPS.write(inStringESCMessage.toInt());
+    inStringESCMessage = "";
   }
-  if (topic == "/FELIA/ROLL")
+  if(strcmp(topic, "/FELIA/ROLL") == 0)
   {
     for (int i = 0; i < length; i++)
     {
-      if ((int)payload[i] > 194 || (int)payload[i] < 0)
-        break;
-      ROLL.write((int)payload[i]);
+      inStringESCMessage += (char)payload[i];
     }
+    Serial.print(" | ");
+    Serial.print("Value: ");
+    Serial.println(inStringESCMessage.toInt());
+    ROLL.write(inStringESCMessage.toInt());
+    inStringESCMessage = "";
   }
-  if (topic == "/FELIA/ELEVATOR")
+  if(strcmp(topic, "/FELIA/ELEVATOR") == 0)
   {
     for (int i = 0; i < length; i++)
     {
-      if ((int)payload[i] > 194 || (int)payload[i] < 0)
-        break;
-      ELEVATOR.write((int)payload[i]);
+      inStringESCMessage += (char)payload[i];
     }
+    Serial.print(" | ");
+    Serial.print("Value: ");
+    Serial.println(inStringESCMessage.toInt());
+    ELEVATOR.write(inStringESCMessage.toInt());
+    inStringESCMessage = "";
   }
-
-} // end callback
+}
 
 void reconnect()
 {
@@ -71,7 +80,7 @@ void reconnect()
   {
     Serial.print("Attempting MQTT connection...");
     // Create a random client ID
-    String clientId = "ESP8266-FELIA-Client-";
+    String clientId = "ESP8266-FELIA-FLAP/ROLL/ELEVATOR-Client-";
     clientId += String(random(0xffff), HEX);
     // Attempt to connect
     // if you MQTT broker has clientID,username and password
@@ -106,6 +115,10 @@ void setup()
   FLAPS.attach(D1);
   ROLL.attach(D2);
   ELEVATOR.attach(D3);
+  delay(1000);
+  FLAPS.write(90);
+  ROLL.write(90);
+  ELEVATOR.write(90);
 }
 
 void loop()

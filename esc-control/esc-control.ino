@@ -1,3 +1,7 @@
+// SERVO (ESC) VALUE : >=29  = OFF
+// SERVO (ESC) VALUE : 30  = RALENTI
+// SERVO (ESC) VALUE : 40  = RALENTI +++
+// SERVO (ESC) VALUE : 180 = MAX VALUE
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 #include <Servo.h>
@@ -5,7 +9,7 @@
 const char *ssid = "HUAWEI-1035";
 const char *password = "93542670";
 const char *mqtt_server = "143.198.182.161";
-//const char* mqtt_server = "iot.eclipse.org";
+
 String inStringESCMessage = "";
 
 Servo ESCPIN;  // create servo object to control a servo
